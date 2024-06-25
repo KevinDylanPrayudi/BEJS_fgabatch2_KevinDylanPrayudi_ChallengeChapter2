@@ -20,8 +20,8 @@ flowchart TD;
     I-->D
     J-->D
     K-->D
-    click I "./##Deposit"
-    click J "./##Withdraw"
+    click I "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_Challenge2?tab=readme-ov-file#deposit"
+    click J "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_Challenge2?tab=readme-ov-file#withdraw"
 ```
 ## Deposit
 ```mermaid
