@@ -1,67 +1,69 @@
 class BankAccount {
-    static define(startingBalance) {
-        return this.balance = startingBalance || 0
+    _balance
+    constructor(startingBalance) {
+        this._balance = startingBalance || 0;
     }
-    static deposit(amount) {
-        this.balance = tambahSaldo(this.balance, amount)
-        return this.balance
+
+    deposit(fn, typeOperation) {
+        if(typeOperation !== "deposit") return
+        let amount = fn("Enter amount to deposit", 1)
+        depositIsValid(amount)
+        this._balance = tambahSaldo(this._balance, amount);
+        return this._balance;
     }
-    static withdraw(amount) {
-        this.balance = kurangiSaldo(this.balance, amount)
-        return this.balance
+
+    withdraw(fn, typeOperation) {
+        if(typeOperation !== "withdraw") return
+        let amount = fn("Enter amount to withdraw", 1)
+        depositIsValid(amount)
+        if(amount > this._balance) throw new CustomError(300, "You don't have enough money in your account.")
+        this._balance = kurangiSaldo(this._balance, amount);
+        return this._balance
     }
-    
-    static getBalance() {
-        return this.balance
+
+    getBalance(typeOperation) {
+        if(typeOperation !== "balance") return
+        return this._balance
+    }
+}
+
+class CustomError extends Error {
+    constructor(errCode, message) {
+        super(message);
+        this.code = errCode;
     }
 }
 
 function init(startingBalance, typeOperation) {
     let saldo = startingBalance;
-    if (isNaN(saldo) || saldo < 0) {
-        alert("Please enter a number or a positive number")
-        return init(queries("Enter starting balance", 1), typeOperation)
-    }
-    if (!typeOperation) {
-        if(saldo) {
+    try {
+        depositIsValid(saldo)
+        saldo = new BankAccount(saldo)
+        typeOperation = typeOperationIsValid(saldo.getBalance("balance"), typeOperation)
+        saldo.deposit(queries, typeOperation)
+        if(typeOperation === "stop") return
+        saldo.withdraw(queries, typeOperation)
+        alert(saldo.getBalance("balance"))
+    } catch (err) {
+        alert(err.message)
+        if(err.code === 100) {
+            return init(queries("Enter starting balance", 1), typeOperation)
+        } else if(err.code === 201) {
             typeOperation = queries("Enter another operation: deposit, withdraw, balance, or stop")
-        } else {
+            if(!typeOperation) return
+            return init(saldo.getBalance("balance"), )
+
+        } else if(err.code === 200) {
             typeOperation = queries("Enter another operation: start deposit(start), deposit, withdraw, or stop")
-        }
-        if (typeOperation === "start") {
-            return init(queries("Enter starting balance", 1), "")
+            if(typeOperation === "start") {
+                return init(queries("Enter starting balance", 1), "")
+            } else {
+                return alert(`Your balance is ${saldo.getBalance() || 0}.`)
+            }
+        } else if(err.code === 300) {
+            return init(saldo.getBalance("balance"), typeOperation)
         }
     }
-    saldo = BankAccount.define(saldo)
-    if (!saldo) {
-        return alert(`Your balance is ${saldo}.`)
-    }
-    if (typeOperation === "stop" || !typeOperation) { return }
-    else if (typeOperation === "deposit") {
-        let deposit = queries("Enter amount to deposit", 1)
-        if (isNaN(deposit) || deposit < 0) {
-            alert("Please enter a number or a positive number")
-            return init(saldo, typeOperation)
-        }
-        saldo = BankAccount.deposit(deposit)
-    } else if (typeOperation === "withdraw") {
-        let withdraw = queries("Enter amount to withdraw", 1)
-        if (isNaN(withdraw) || withdraw < 0 || withdraw > saldo) {
-            alert(`Please enter a number, a positive number, or a number lesser than your balance. Your balance is ${saldo}.`)
-            return init(saldo, typeOperation)
-        }
-        saldo = BankAccount.withdraw(withdraw)
-    } else if(typeOperation === "balance") {
-        saldo = BankAccount.getBalance()
-        alert(`Your balance is ${saldo}.`)
-    }
-    
-    else {
-        alert("Please enter 'deposit', 'withdraw', or 'stop'.")
-        return init(saldo, queries("Enter another operation: deposit, withdraw, or stop"))
-    }
-    typeOperation = queries("Enter another operation: deposit, withdraw, balance, or stop")
-    return init(saldo, typeOperation)
 }
 
 init(queries("Enter starting balance", 1), "")
@@ -82,4 +84,22 @@ function queries(query, typeQuery) {
         result = window.prompt(query)
     }
     return result
+}
+
+function depositIsValid(deposit) {
+    if (isNaN(deposit) || deposit < 0) {
+        throw new CustomError(100, "Please enter a number or a positive number")
+    }
+}
+
+function typeOperationIsValid(deposit, typeOperation) {
+    if (!typeOperation) {
+        if(deposit) {
+            throw new CustomError(201, "Please enter 'deposit', 'withdraw', or 'stop'.")
+        } else {
+            throw new CustomError(200, "Please enter 'start', 'deposit', 'withdraw', or 'stop'.")
+        }
+    } else {
+        return typeOperation
+    }
 }
