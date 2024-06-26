@@ -1,4 +1,11 @@
 # Basic Banking System
+<details open>
+<summary>List of contents</summary>
+<ul>
+    <li>[Deposit](#deposit)</li>
+    <li>[Withdraw](#withdraw)</li>
+</ul>
+</details>
 The BankingSystem class is a subclass of BankAccount that provides methods for depositing, withdrawing, and retrieving the balance of a bank account. It extends the functionality of the BankAccount class by adding error handling and user interaction. The deposit and withdraw methods prompt the user for input, validate the amount, and update the balance accordingly. The getBalance method retrieves the current balance of the account asynchronously after a delay of 1 second.
 
 ```mermaid
