@@ -1,5 +1,5 @@
-import tambahSaldo from "./utility/operation/deposit.js"
-import kurangiSaldo from "./utility/operation/withdraw.js"
+import tambahSaldo from "./utility/operations/deposit.js"
+import kurangiSaldo from "./utility/operations/withdraw.js"
 class BankAccount {
     _balance
     constructor(startingBalance) {
