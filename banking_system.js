@@ -68,8 +68,8 @@ async function init(startingBalance, typeOperation) {
     try {
         if (!(saldo instanceof BankingSystem)) saldo = new BankingSystem(saldo);
         validation([
-            { errcode: 400, value: `${typeOperation == null} && ${saldo._balance === 0}`, operator: "===", desiredValue: true, message: "Please enter 'start', 'deposit', 'withdraw', or 'stop'. check validation" },
-            { errcode: 401, value: `${typeOperation == null} && ${saldo._balance !== 0}`, operator: "===", desiredValue: true, message: "Please enter 'deposit', 'withdraw', or 'stop'. check validation" }
+            { errcode: 400, value: `${typeOperation == null} && ${saldo._balance === 0}`, operator: "===", desiredValue: true, message: "Please enter start for starting balance." },
+            { errcode: 401, value: `${typeOperation == null} && ${saldo._balance !== 0}`, operator: "===", desiredValue: true, message: "Please enter 'deposit', 'withdraw', or 'stop'." }
         ])
         if (!typeOperation) typeOperation = queries("Enter another operation: deposit, withdraw, balance, or stop") || "stop"
         if (typeOperation === "stop") return
@@ -79,7 +79,7 @@ async function init(startingBalance, typeOperation) {
         return init(saldo, queries("Enter another operation: deposit, withdraw, balance, or stop")|| "stop")
     } catch (err) {
         alert(err.message)
-        error400(err, saldo, init)
+        error400(err, saldo)(init)
     }
 }
 
