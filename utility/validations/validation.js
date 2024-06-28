@@ -9,7 +9,7 @@ export default function validation(params) {
             if(key === "message") message = value
             if(key === "desiredValue") desiredValue = value
             if(key === "operator") operator = value
-            if((val || val === 0) && key && message && desiredValue) {
+            if((val || val === 0) && key && message && (desiredValue || desiredValue === 0)) {
                 if(eval(`${val} ${operator} ${desiredValue}`)) {
                     throw new CustomError(errcode, message)
                 }

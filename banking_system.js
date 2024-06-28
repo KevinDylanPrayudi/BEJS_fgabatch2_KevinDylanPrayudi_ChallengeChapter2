@@ -46,8 +46,7 @@ class BankingSystem extends BankAccount {
                 { errcode: 301, value: +amount, operator: "<", desiredValue: 1, message: "Please enter positive number" },
                 { errcode: 302, value: +amount, operator: ">", desiredValue: this._balance, message: "You don't have enough money in your account. Your balance is " + this._balance }
             ])
-            super.withdraw(amount)
-            return this._balance
+            this._balance = super.withdraw(amount)
         } catch (err) {
             alert(err.message)
             return this.withdraw(queries, typeOperation)
